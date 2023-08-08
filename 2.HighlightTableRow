@@ -1,0 +1,7 @@
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+
+    On Error Resume Next
+    
+    HighlightTableRow Target
+
+End Sub

@@ -1,0 +1,38 @@
+Option Explicit
+Public Sub HighlightTableRow(Target As Excel.Range)
+
+    Dim t As ListObject
+    Dim lngInTable As Long
+    Dim c As Long
+    
+    Const COLOR_SELECT = xlThemeColorAccent1
+    Const COLOR_LIGHTER = 0.4
+    
+    On Error Resume Next
+    
+    If Target.Interior.Pattern = xlPatternSolid Then Exit Sub
+    
+    For Each t In Target.Parent.ListObjects
+        c = c + 1
+        If Not Intersect(Target, t.DataBodyRange) Is Nothing Then
+            lngInTable = c
+        End If
+        t.Range.Interior.Pattern = xlNone
+    Next
+    If lngInTable = 0 Then Exit Sub
+    
+    With Target.Parent.ListObjects(lngInTable)
+        With .Range.Interior
+            .Pattern = xlNone
+            .TintAndShade = 0
+            .PatternTintAndShade = 0
+        End With
+        With .DataBodyRange
+            With .Resize(Target.Rows.Count).Offset(Target.Row - .Row).Interior
+                .ThemeColor = COLOR_SELECT
+                .TintAndShade = 1 - COLOR_LIGHTER
+            End With
+        End With
+    End With
+
+End Sub
